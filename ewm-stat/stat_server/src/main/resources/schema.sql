@@ -3,7 +3,5 @@ CREATE TABLE IF NOT EXISTS stat (
     app	VARCHAR(50)                             NOT NULL,
     uri	VARCHAR(50)                             NOT NULL,
     ip	VARCHAR(15)                             NOT NULL,
-    time_stamp TIMESTAMP                        NOT NULL,
-    CONSTRAINT pk_stat PRIMARY KEY (id)
+    time_stamp TIMESTAMP                        NOT NULL
     );
-
