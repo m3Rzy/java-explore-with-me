@@ -20,7 +20,7 @@ public class StatDto {
     @Size(max = 50)
     private String app;
     @NotBlank
-    @Size(max = 50)
+    @Size(max = 255)
     private String uri;
     @NotBlank
     @Size(max = 15)

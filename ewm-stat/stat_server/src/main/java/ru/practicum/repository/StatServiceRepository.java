@@ -10,24 +10,24 @@ import java.util.List;
 
 public interface StatServiceRepository extends JpaRepository<Stat, Long> {
 
-    @Query("select new ru.practicum.dto.StatResponseDto(s.ip, s.uri, count(s.ip)) " +
-            "from Stat as s " +
-            "where s.timestamp between ?1 and ?2 and s.uri in ?3 " +
-            "group by s.ip, s.uri " +
-            "order by count(s.ip) desc ")
+    @Query("SELECT NEW ru.practicum.dto.StatResponseDto(s.ip, s.uri, COUNT(s.ip)) " +
+            "FROM Stat AS s " +
+            "WHERE s.timestamp BETWEEN ?1 AND ?2 AND s.uri IN ?3 " +
+            "GROUP BY s.ip, s.uri " +
+            "ORDER BY COUNT(s.ip) DESC ")
     List<StatResponseDto> findStatsWithUrisIpNotUnique(LocalDateTime start, LocalDateTime end, List<String> uris);
 
-    @Query("select new ru.practicum.dto.StatResponseDto(s.ip, s.uri, count(s.ip)) " +
-            "from Stat as s " +
-            "where s.timestamp between ?1 and ?2 " +
-            "group by s.ip, s.uri " +
-            "order by count(s.ip) desc ")
+    @Query("SELECT NEW ru.practicum.dto.StatResponseDto(s.ip, s.uri, COUNT(s.ip)) " +
+            "FROM Stat AS s " +
+            "WHERE s.timestamp BETWEEN ?1 AND ?2 " +
+            "GROUP BY s.ip, s.uri " +
+            "ORDER BY COUNT(s.ip) DESC ")
     List<StatResponseDto> findStatsWhereIpNotUnique(LocalDateTime start, LocalDateTime end);
 
-    @Query("select new ru.practicum.dto.StatResponseDto(s.ip, s.uri, count(distinct s.ip)) " +
-            "from Stat as s " +
-            "where s.timestamp between ?1 and ?2 and s.uri in ?3 " +
-            "group by s.ip, s.uri " +
-            "order by count(distinct s.ip) desc ")
+    @Query("SELECT NEW ru.practicum.dto.StatResponseDto(s.ip, s.uri, COUNT(distinct s.ip)) " +
+            "FROM Stat AS s " +
+            "WHERE s.timestamp BETWEEN ?1 AND ?2 AND s.uri IN ?3 " +
+            "GROUP BY s.ip, s.uri " +
+            "ORDER BY COUNT(distinct s.ip) DESC ")
     List<StatResponseDto> findStatsWithUrisUniqueIp(LocalDateTime start, LocalDateTime end, List<String> uris);
 }
