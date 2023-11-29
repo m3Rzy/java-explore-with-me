@@ -17,10 +17,6 @@ import java.util.Map;
 @Service
 public class StatClient extends BaseClient {
 
-    public ResponseEntity<Object> addStatEvent(StatDto stat) {
-        return post(stat);
-    }
-
     public StatClient(@Value("${stats-service.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
@@ -30,8 +26,11 @@ public class StatClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> readStatEvent(String start, String end,
-                                                @Nullable List<String> uris, boolean unique) {
+    public ResponseEntity<Object> addStatEvent(StatDto stat) {
+        return post("/hit", stat);
+    }
+
+    public ResponseEntity<Object> readStatEvent(String start, String end, @Nullable List<String> uris, boolean unique) {
         Map<String, Object> parameters;
         if (uris == null) {
             parameters = Map.of("start", encode(start),
@@ -39,8 +38,8 @@ public class StatClient extends BaseClient {
                     "unique", unique);
             return get("/stats?start={start}&end={end}&unique={unique}", parameters);
         }
-        parameters = Map.of("start", encode(start),
-                "end", encode(end),
+        parameters = Map.of("start", start,
+                "end", end,
                 "uris", String.join(",", uris),
                 "unique", unique);
         return get("/stats?start={start}&end={end}&unique={unique}&uris={uris}", parameters);
