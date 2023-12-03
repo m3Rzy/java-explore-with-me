@@ -8,6 +8,7 @@ import ru.practicum.model.Stat;
 public class StatMapper {
 
     public static Stat toStat(StatDto statDto) {
+
         return Stat.builder()
                 .ip(statDto.getIp())
                 .uri(statDto.getUri())

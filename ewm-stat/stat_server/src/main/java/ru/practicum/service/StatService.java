@@ -7,9 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface StatService {
+    StatDto createStat(StatDto statDto);
 
-    StatDto create(StatDto statDto);
-
-    List<StatResponseDto> read(LocalDateTime start,
-                               LocalDateTime end, List<String> uris, boolean unique);
+    List<StatResponseDto> readStat(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique);
 }
