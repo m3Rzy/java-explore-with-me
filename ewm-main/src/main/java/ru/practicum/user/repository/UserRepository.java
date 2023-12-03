@@ -8,11 +8,13 @@ import ru.practicum.user.model.User;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    Boolean isExistEmail(String email);
 
-    @Query("SELECT * FROM User")
-    List<User> findUsersWithPageable(Pageable pageable);
+    Boolean existsByEmail(String email);
 
-    @Query("SELECT user FROM User user WHERE user.id IN ?1")
-    List<User> findUserByIdWithPageable(List<Long> id, Pageable pageable);
+    @Query("SELECT u FROM User u WHERE u.id IN ?1")
+    List<User> findAllById(List<Long> id, Pageable pageable);
+
+    @Query("SELECT u " +
+            "FROM User u")
+    List<User> findAllUser(Pageable pageable);
 }

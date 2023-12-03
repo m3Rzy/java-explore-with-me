@@ -1,10 +1,7 @@
 package ru.practicum.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,16 +13,20 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class StatDto {
-    @NotBlank
-    @Size(max = 50)
+
+    @NotBlank(groups = Validator.Create.class)
+    @Size(max = 50, groups = Validator.Create.class)
     private String app;
-    @NotBlank
-    @Size(max = 50)
+
+    @NotBlank(groups = Validator.Create.class)
+    @Size(max = 50, groups = Validator.Create.class)
     private String uri;
-    @NotBlank
-    @Size(max = 15)
+
+    @NotBlank(groups = Validator.Create.class)
+    @Size(max = 15, groups = Validator.Create.class)
     private String ip;
-    @NotNull
+
+    @NotNull(groups = Validator.Create.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime timestamp;
 }

@@ -10,24 +10,32 @@ import java.util.List;
 
 public interface StatServiceRepository extends JpaRepository<Stat, Long> {
 
-    @Query("select new ru.practicum.dto.StatResponseDto(s.ip, s.uri, count(s.ip)) " +
-            "from Stat as s " +
-            "where s.timestamp between ?1 and ?2 and s.uri in ?3 " +
-            "group by s.ip, s.uri " +
-            "order by count(s.ip) desc ")
-    List<StatResponseDto> findStatsWithUrisIpNotUnique(LocalDateTime start, LocalDateTime end, List<String> uris);
+    @Query("SELECT new ru.practicum.dto.StatResponseDto(stat.ip, stat.uri, COUNT(distinct stat.ip)) " +
+            "FROM Stat AS stat " +
+            "WHERE stat.timestamp BETWEEN ?1 AND ?2 " +
+            "GROUP BY stat.ip, stat.uri " +
+            "ORDER BY COUNT(distinct stat.ip) DESC")
+    List<StatResponseDto> findAllByTimestampBetweenStartAndEndWithUniqueIp(LocalDateTime start, LocalDateTime end);
 
-    @Query("select new ru.practicum.dto.StatResponseDto(s.ip, s.uri, count(s.ip)) " +
-            "from Stat as s " +
-            "where s.timestamp between ?1 and ?2 " +
-            "group by s.ip, s.uri " +
-            "order by count(s.ip) desc ")
-    List<StatResponseDto> findStatsWhereIpNotUnique(LocalDateTime start, LocalDateTime end);
+    @Query("SELECT new ru.practicum.dto.StatResponseDto(stat.ip, stat.uri, COUNT(stat.ip)) " +
+            "FROM Stat AS stat " +
+            "WHERE stat.timestamp BETWEEN ?1 AND ?2 " +
+            "GROUP BY stat.ip, stat.uri " +
+            "ORDER BY COUNT(stat.ip) DESC ")
+    List<StatResponseDto> findAllByTimestampBetweenStartAndEndWhereIpNotUnique(LocalDateTime start, LocalDateTime end);
 
-    @Query("select new ru.practicum.dto.StatResponseDto(s.ip, s.uri, count(distinct s.ip)) " +
-            "from Stat as s " +
-            "where s.timestamp between ?1 and ?2 and s.uri in ?3 " +
-            "group by s.ip, s.uri " +
-            "order by count(distinct s.ip) desc ")
-    List<StatResponseDto> findStatsWithUrisUniqueIp(LocalDateTime start, LocalDateTime end, List<String> uris);
+    @Query("SELECT new ru.practicum.dto.StatResponseDto(stat.ip, stat.uri, COUNT(distinct stat.ip)) " +
+            "FROM Stat AS stat " +
+            "WHERE stat.timestamp BETWEEN ?1 AND ?2 AND stat.uri IN ?3 " +
+            "GROUP BY stat.ip, stat.uri " +
+            "ORDER BY COUNT(distinct stat.ip) DESC ")
+    List<StatResponseDto> findAllByTimestampBetweenStartAndEndWithUrisUniqueIp(LocalDateTime start, LocalDateTime end, List<String> uris);
+
+    @Query("SELECT new ru.practicum.dto.StatResponseDto(stat.ip, stat.uri, COUNT(stat.ip)) " +
+            "FROM Stat AS stat " +
+            "WHERE stat.timestamp BETWEEN ?1 AND ?2 AND stat.uri IN ?3 " +
+            "GROUP BY stat.ip, stat.uri " +
+            "ORDER BY COUNT(stat.ip) DESC ")
+    List<StatResponseDto> findAllByTimestampBetweenStartAndEndWithUrisIpNotUnique(LocalDateTime start, LocalDateTime end, List<String> uris);
+
 }

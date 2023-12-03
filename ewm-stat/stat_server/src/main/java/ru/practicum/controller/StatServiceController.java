@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.StatDto;
 import ru.practicum.dto.StatResponseDto;
+import ru.practicum.dto.Validator;
 import ru.practicum.service.StatService;
 
 import java.time.LocalDateTime;
@@ -23,22 +24,18 @@ public class StatServiceController {
 
     private final StatService statService;
 
-    @PostMapping("/hit")
-    public ResponseEntity<StatDto> addStatEvent(@RequestBody @Validated StatDto statDto) {
-        StatDto statEvent = statService.create(statDto);
-        return new ResponseEntity<>(statEvent, HttpStatus.CREATED);
+    @GetMapping("/stats")
+    public ResponseEntity<List<StatResponseDto>> getStatEvent(@RequestParam @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime start,
+                                                               @RequestParam @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime end,
+                                                               @RequestParam(defaultValue = "") List<String> uris,
+                                                               @RequestParam(defaultValue = "false") boolean unique) {
+        List<StatResponseDto> stats = statService.readStat(start, end, uris, unique);
+        return new ResponseEntity<>(stats, HttpStatus.OK);
     }
 
-    @GetMapping("/stats")
-    public ResponseEntity<List<StatResponseDto>> readStatEvent(
-            @RequestParam @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime start,
-
-            @RequestParam @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime end,
-
-            @RequestParam(defaultValue = "") List<String> uris,
-
-            @RequestParam(defaultValue = "false") boolean unique) {
-        List<StatResponseDto> stats = statService.read(start, end, uris, unique);
-        return new ResponseEntity<>(stats, HttpStatus.OK);
+    @PostMapping("/hit")
+    public ResponseEntity<StatDto> addStatEvent(@RequestBody @Validated(Validator.Create.class) StatDto statDto) {
+        StatDto statEvent = statService.createStat(statDto);
+        return new ResponseEntity<>(statEvent, HttpStatus.CREATED);
     }
 }
