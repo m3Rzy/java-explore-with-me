@@ -17,9 +17,14 @@ public class StatDto {
     @NotBlank(groups = Validator.Create.class)
     @Size(max = 50, groups = Validator.Create.class)
     private String app;
+ main_svc
 
     @NotBlank(groups = Validator.Create.class)
     @Size(max = 50, groups = Validator.Create.class)
+
+    @NotBlank
+    @Size(max = 255)
+ main
     private String uri;
 
     @NotBlank(groups = Validator.Create.class)
