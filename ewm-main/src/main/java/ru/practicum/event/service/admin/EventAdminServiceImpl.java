@@ -37,16 +37,6 @@ public class EventAdminServiceImpl implements EventAdminService {
     private final StatService statService;
 
     @Transactional
-    private Location saveLocation(Location location) {
-        return locationRepository.save(location);
-    }
-
-    @Transactional
-    private Optional<Location> getLocation(Location location) {
-        return locationRepository.findByLatAndLon(location.getLat(), location.getLon());
-    }
-
-    @Transactional
     @Override
     public EventFullDto updateAdminEvent(Long eventId, AdminEventRequestDto adminEventRequestDto) {
         EventAdminDto eventAdminDto = EventMapper.toAdminEventFromAdminDto(adminEventRequestDto);
@@ -121,12 +111,25 @@ public class EventAdminServiceImpl implements EventAdminService {
         List<Event> events = eventRepository.findAllByParam(users, states, categories,
                 start, end, PageRequest.of(from, size, Sort.Direction.ASC, "id"));
 
+        if (events.isEmpty()) {
+            return List.of();
+        }
+
         Map<Long, Long> confirmedRequest = statService.toConfirmedRequest(events);
         Map<Long, Long> view = statService.toView(events);
+
         for (Event event : events) {
             event.setConfirmedRequests(confirmedRequest.getOrDefault(event.getId(), 0L));
             event.setView(view.getOrDefault(event.getId(), 0L));
         }
         return EventMapper.toListEventFullDto(events);
+    }
+
+    private Location saveLocation(Location location) {
+        return locationRepository.save(location);
+    }
+
+    private Optional<Location> getLocation(Location location) {
+        return locationRepository.findByLatAndLon(location.getLat(), location.getLon());
     }
 }
