@@ -20,4 +20,5 @@ public class EventDto {
     private Boolean paid;
     private String title;
     private Long views;
+    private Long commentCount;
 }
