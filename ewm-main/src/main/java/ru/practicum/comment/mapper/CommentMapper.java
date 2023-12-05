@@ -33,6 +33,10 @@ public class CommentMapper {
                 .build();
     }
 
+    public List<CommentDto> toListCommentDto(List<Comment> list) {
+        return list.stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
+    }
+
     public CommentShortDto toCommentShortDto(Comment comment) {
         return CommentShortDto.builder()
                 .author(UserMapper.toUserDto(comment.getAuthor()))
