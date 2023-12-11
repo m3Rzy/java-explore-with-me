@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.comment.service.CommentPrivateService;
 import ru.practicum.event.dto.EventDto;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
@@ -28,6 +29,7 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final StatService statService;
+    private final CommentPrivateService commentPrivateService;
 
     @Override
     public List<EventShortDto> getPublicEvents(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart,
@@ -36,16 +38,15 @@ public class EventServiceImpl implements EventService {
         sort = (sort != null && sort.equals("EVENT_DATE")) ? "eventDate" : "id";
 
         List<Event> list = eventRepository.findAllEvents(text, categories, paid, rangeStart, rangeEnd,
-                onlyAvailable, sort,
-                PageRequest.of(from > 0 ? from / size : 0, size, Sort.by(sort).descending()));
+                onlyAvailable, sort, PageRequest.of(from > 0 ? from / size : 0, size, Sort.by(sort).descending()));
 
         Map<Long, Long> confirmedRequest = statService.toConfirmedRequest(list);
         Map<Long, Long> view = statService.toView(list);
 
         List<EventDto> events = new ArrayList<>();
 
-        list.forEach(event -> events.add(EventMapper.toEventShort(event, view.getOrDefault(event.getId(), 0L),
-                confirmedRequest.getOrDefault(event.getId(), 0L))));
+        list.forEach(event -> events.add(EventMapper.toEventDto(event, view.getOrDefault(event.getId(), 0L),
+                confirmedRequest.getOrDefault(event.getId(), 0L), 0L)));
 
         statService.addHits(request);
         return EventMapper.toListEventShortDto(events);

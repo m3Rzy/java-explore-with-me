@@ -73,8 +73,7 @@ public class EventMapper {
                 .eventDate(updateEventDto.getEventDate())
                 .build();
 
-        event.setLocation(updateEventDto.getLocation()
-                == null ? null : LocationMapper.toLocation(updateEventDto.getLocation()));
+        event.setLocation(updateEventDto.getLocation() == null ? null : LocationMapper.toLocation(updateEventDto.getLocation()));
 
         return event;
     }
@@ -92,14 +91,14 @@ public class EventMapper {
                 .title(adminEvent.getTitle())
                 .build();
 
-        event.setLocation(adminEvent.getLocation()
-                == null ? null : LocationMapper.toLocation(adminEvent.getLocation()));
+        event.setLocation(adminEvent.getLocation() == null ? null : LocationMapper.toLocation(adminEvent.getLocation()));
 
         return event;
     }
 
-    public EventDto toEventShort(Event event, Long view, Long confirmedRequests) {
-        return EventDto.builder()
+    public EventDto toEventDto(Event event, Long view, Long confirmedRequests, Long commentCount) {
+        return EventDto
+                .builder()
                 .id(event.getId())
                 .eventDate(event.getEventDate())
                 .confirmedRequests(confirmedRequests)
@@ -109,6 +108,7 @@ public class EventMapper {
                 .initiator(event.getInitiator())
                 .paid(event.getPaid())
                 .title(event.getTitle())
+                .commentCount(commentCount)
                 .build();
     }
 
@@ -159,6 +159,13 @@ public class EventMapper {
                 .paid(event.getPaid())
                 .title(event.getTitle())
                 .views(event.getView())
+                .build();
+    }
+
+    public EventCommentDto toEventComment(Event event) {
+        return EventCommentDto.builder()
+                .id(event.getId())
+                .title(event.getTitle())
                 .build();
     }
 }
